@@ -9,9 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.cjs",
-    "heroku-prebuild": "echo 'Pre-build completed'",
-    "heroku-postbuild": "npx vite build"
+    "start": "npm run build && node server.cjs",
+    "heroku-prebuild": "echo 'Pre-build completed'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
