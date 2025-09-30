@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.js",
+    "start": "node server.cjs",
     "heroku-prebuild": "rm -rf node_modules package-lock.json",
     "heroku-postbuild": "npx vite build"
   },
