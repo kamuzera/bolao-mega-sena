@@ -1,0 +1,7 @@
+project_id = "ebyhoyswjzwatbbtlkuq"
+
+[functions.whatsapp-notifications]
+verify_jwt = false
+
+[functions.whatsapp-instance]
+verify_jwt = false
