@@ -13,17 +13,11 @@ RUN npm install
 # Copia o código fonte
 COPY . .
 
-# Executa o build
-RUN npm run build
-
-# Remove devDependencies para reduzir tamanho da imagem
-RUN npm prune --production
-
 # Expõe a porta
 EXPOSE 3000
 
 # Define variável de ambiente
 ENV PORT=3000
 
-# Comando para iniciar o servidor
-CMD ["node", "server.cjs"]
+# Comando para iniciar o servidor (gera o build com as variáveis atuais)
+CMD ["npm", "start"]
