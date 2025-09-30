@@ -45,9 +45,7 @@ serve(async (req) => {
     }
 
     // Initialize Stripe with configured key
-    const stripe = new Stripe(stripeConfig[0].secret_key, {
-      apiVersion: "2025-08-27.basil",
-    });
+    const stripe = new Stripe(stripeConfig[0].secret_key);
     
     logStep("Stripe inicializado com chave configurada");
 

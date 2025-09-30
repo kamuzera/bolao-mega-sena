@@ -12,11 +12,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const evolutionApiKey = Deno.env.get('EVOLUTION_API_KEY') || '429683C4C977415CAAFCCE10F7D57E11';
-const evolutionServerUrl = Deno.env.get('EVOLUTION_SERVER_URL') || 'https://api.yamone.com.br';
-
-// Para desenvolvimento local, vamos simular uma resposta de sucesso
-const isDevelopment = evolutionApiKey === 'demo-key';
+const evolutionApiKey = Deno.env.get('EVOLUTION_API_KEY');
+const evolutionServerUrl = Deno.env.get('EVOLUTION_SERVER_URL');
+// Permite simulação explícita via variável de ambiente
+const isSimulation = Deno.env.get('EVOLUTION_SIMULATE') === 'true';
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -25,6 +24,19 @@ serve(async (req) => {
   }
 
   try {
+    if (!evolutionApiKey || !evolutionServerUrl) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'EVOLUTION_API_KEY/EVOLUTION_SERVER_URL não configurados',
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const jsonHeaders: Record<string, string> = {
+      apikey: evolutionApiKey as string,
+      'Content-Type': 'application/json',
+    };
     const requestData = await req.json();
     const { action, instanceName, settings } = requestData;
     
@@ -65,8 +77,8 @@ serve(async (req) => {
 
 async function createInstance(instanceName: string) {
   try {
-    // Modo de desenvolvimento - simular criação de instância
-    if (isDevelopment) {
+    // Modo de simulação controlado por variável de ambiente
+    if (isSimulation) {
       console.log('Modo de desenvolvimento: Simulando criação de instância:', instanceName);
       
       return new Response(
@@ -86,10 +98,7 @@ async function createInstance(instanceName: string) {
 
     const response = await fetch(`${evolutionServerUrl}/instance/create`, {
       method: 'POST',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: jsonHeaders,
       body: JSON.stringify({
         instanceName: instanceName,
         qrcode: true,
@@ -136,10 +145,7 @@ async function connectInstance(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/connect/${instanceName}`, {
       method: 'GET',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -174,10 +180,7 @@ async function getInstanceStatus(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/connectionState/${instanceName}`, {
       method: 'GET',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -209,10 +212,7 @@ async function disconnectInstance(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/logout/${instanceName}`, {
       method: 'DELETE',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -245,8 +245,8 @@ async function disconnectInstance(instanceName: string) {
 
 async function deleteInstance(instanceName: string) {
   try {
-    // Modo de desenvolvimento - simular deleção
-    if (isDevelopment) {
+    // Modo de simulação controlado por variável de ambiente
+    if (isSimulation) {
       console.log('Modo de desenvolvimento: Simulando deleção de instância:', instanceName);
       
       return new Response(
@@ -264,10 +264,7 @@ async function deleteInstance(instanceName: string) {
 
     const response = await fetch(`${evolutionServerUrl}/instance/delete/${instanceName}`, {
       method: 'DELETE',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -300,8 +297,8 @@ async function deleteInstance(instanceName: string) {
 
 async function fetchInstances() {
   try {
-    // Modo de desenvolvimento - simular lista de instâncias
-    if (isDevelopment) {
+    // Modo de simulação controlado por variável de ambiente
+    if (isSimulation) {
       console.log('Modo de desenvolvimento: Simulando busca de instâncias');
       
       return new Response(
@@ -316,10 +313,7 @@ async function fetchInstances() {
 
     const response = await fetch(`${evolutionServerUrl}/instance/fetchInstances`, {
       method: 'GET',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -351,10 +345,7 @@ async function getSettings(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/settings/find/${instanceName}`, {
       method: 'GET',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      }
+      headers: jsonHeaders,
     });
 
     const data = await response.json();
@@ -385,10 +376,7 @@ async function updateSettings(instanceName: string, settings: any) {
   try {
     const response = await fetch(`${evolutionServerUrl}/settings/set/${instanceName}`, {
       method: 'POST',
-      headers: {
-        'apikey': evolutionApiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: jsonHeaders,
       body: JSON.stringify(settings)
     });
 

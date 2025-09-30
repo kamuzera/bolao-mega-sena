@@ -1,73 +1,47 @@
-# Welcome to your Lovable project
+# Sistema de Concursos
 
-## Project info
+Sistema web para gerenciamento de concursos e participações.
 
-**URL**: https://lovable.dev/projects/1c0347e2-13a6-4f61-9ce4-b9d2900bcb01
+## Tecnologias Utilizadas
 
-## How can I edit this code?
+- **Frontend**: React + TypeScript + Vite
+- **UI**: shadcn/ui + Tailwind CSS
+- **Backend**: Supabase
+- **Deploy**: Heroku
 
-There are several ways of editing your application.
+## Como executar
 
-**Use Lovable**
+1. Instale as dependências:
+```bash
+npm install
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1c0347e2-13a6-4f61-9ce4-b9d2900bcb01) and start prompting.
+2. Configure as variáveis de ambiente
 
-Changes made via Lovable will be committed automatically to this repo.
+Crie um arquivo `.env` na raiz com:
 
-**Use your preferred IDE**
+```bash
+VITE_SUPABASE_URL=seu-projeto.supabase.co
+VITE_SUPABASE_ANON_KEY=chave_anon
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Nas Edge Functions do Supabase, defina os segredos (no painel ou CLI):
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+supabase secrets set EVOLUTION_API_KEY=xxxxx
+supabase secrets set EVOLUTION_SERVER_URL=https://api.seuservidor.com
+# opcional: simular respostas sem conexão real
+supabase secrets set EVOLUTION_SIMULATE=true
+```
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Execute o projeto:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Scripts disponíveis
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/1c0347e2-13a6-4f61-9ce4-b9d2900bcb01) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- `npm run dev` - Executa o servidor de desenvolvimento
+- `npm run build` - Gera build de produção
+- `npm run start` - Executa o servidor de produção
+- `npm run lint` - Executa o linter
