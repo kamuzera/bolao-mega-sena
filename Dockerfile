@@ -4,17 +4,14 @@ FROM node:18-alpine
 # Define o diretório de trabalho
 WORKDIR /app
 
-# Copia package.json e package-lock.json (se existir)
-COPY package*.json ./
+# Copia package.json
+COPY package.json ./
 
-# Instala dependências
-RUN npm ci --only=production
+# Instala todas as dependências
+RUN npm install
 
 # Copia o código fonte
 COPY . .
-
-# Instala todas as dependências (incluindo devDependencies para build)
-RUN npm install
 
 # Executa o build
 RUN npm run build
