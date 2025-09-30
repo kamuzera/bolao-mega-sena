@@ -4,7 +4,17 @@ const path = require('path');
 
 const port = process.env.PORT || 3000;
 
+// Verifica se a pasta dist existe
+const distPath = path.join(__dirname, 'dist');
+if (!fs.existsSync(distPath)) {
+  console.error('ERROR: dist folder not found! Build may have failed.');
+  console.error('Expected dist folder at:', distPath);
+  process.exit(1);
+}
+
 const server = http.createServer((req, res) => {
+  console.log(`Request: ${req.method} ${req.url}`);
+  
   let filePath = path.join(__dirname, 'dist', req.url === '/' ? 'index.html' : req.url);
   
   // Se o arquivo não existir, tenta index.html (para SPA routing)
@@ -27,6 +37,7 @@ const server = http.createServer((req, res) => {
   
   fs.readFile(filePath, (err, data) => {
     if (err) {
+      console.error(`Error reading file: ${filePath}`, err.message);
       res.writeHead(404);
       res.end('Not Found');
       return;
@@ -39,4 +50,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Serving files from: ${distPath}`);
 });

@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "node server.cjs",
-    "heroku-prebuild": "rm -rf node_modules package-lock.json",
+    "heroku-prebuild": "echo 'Pre-build completed'",
     "heroku-postbuild": "npx vite build"
   },
   "dependencies": {
@@ -61,7 +61,6 @@
     "react-resizable-panels": "^2.1.9",
     "react-router-dom": "^6.30.1",
     "recharts": "^2.15.4",
-    "serve": "^14.2.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
