@@ -17,6 +17,11 @@ const evolutionServerUrl = Deno.env.get('EVOLUTION_SERVER_URL');
 // Permite simulação explícita via variável de ambiente
 const isSimulation = Deno.env.get('EVOLUTION_SIMULATE') === 'true';
 
+const getJsonHeaders = (): Record<string, string> => ({
+  apikey: evolutionApiKey ?? '',
+  'Content-Type': 'application/json',
+});
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -33,10 +38,6 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    const jsonHeaders: Record<string, string> = {
-      apikey: evolutionApiKey as string,
-      'Content-Type': 'application/json',
-    };
     const requestData = await req.json();
     const { action, instanceName, settings } = requestData;
     
@@ -98,7 +99,7 @@ async function createInstance(instanceName: string) {
 
     const response = await fetch(`${evolutionServerUrl}/instance/create`, {
       method: 'POST',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
       body: JSON.stringify({
         instanceName: instanceName,
         qrcode: true,
@@ -145,7 +146,7 @@ async function connectInstance(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/connect/${instanceName}`, {
       method: 'GET',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -180,7 +181,7 @@ async function getInstanceStatus(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/connectionState/${instanceName}`, {
       method: 'GET',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -212,7 +213,7 @@ async function disconnectInstance(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/instance/logout/${instanceName}`, {
       method: 'DELETE',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -264,7 +265,7 @@ async function deleteInstance(instanceName: string) {
 
     const response = await fetch(`${evolutionServerUrl}/instance/delete/${instanceName}`, {
       method: 'DELETE',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -313,7 +314,7 @@ async function fetchInstances() {
 
     const response = await fetch(`${evolutionServerUrl}/instance/fetchInstances`, {
       method: 'GET',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -345,7 +346,7 @@ async function getSettings(instanceName: string) {
   try {
     const response = await fetch(`${evolutionServerUrl}/settings/find/${instanceName}`, {
       method: 'GET',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
     });
 
     const data = await response.json();
@@ -376,7 +377,7 @@ async function updateSettings(instanceName: string, settings: any) {
   try {
     const response = await fetch(`${evolutionServerUrl}/settings/set/${instanceName}`, {
       method: 'POST',
-      headers: jsonHeaders,
+      headers: getJsonHeaders(),
       body: JSON.stringify(settings)
     });
 

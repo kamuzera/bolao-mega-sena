@@ -238,7 +238,7 @@ const Resultados = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Resultados das Loterias</h1>
@@ -258,12 +258,13 @@ const Resultados = () => {
       </div>
 
       {/* Seletor de Loteria */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-1 flex-wrap">
         {loteriasDisponiveis.map((loteria) => (
           <Button
             key={loteria}
             variant={loteriaAtiva === loteria ? "default" : "outline"}
             size="sm"
+            className="h-9 px-3"
             onClick={() => setLoteriaAtiva(loteria)}
           >
             {getLoteriaNome(loteria)}
@@ -273,7 +274,7 @@ const Resultados = () => {
 
       {resultadoAtual && (
         <Tabs defaultValue="atual" className="space-y-4">
-          <TabsList>
+          <TabsList className="w-full sm:w-auto grid grid-cols-2 sm:flex sm:gap-2">
             <TabsTrigger value="atual">Resultado Atual</TabsTrigger>
             <TabsTrigger value="historico" onClick={fetchHistoricoResultados}>Histórico</TabsTrigger>
           </TabsList>
@@ -284,11 +285,11 @@ const Resultados = () => {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="flex items-center gap-2 text-2xl">
-                      <Trophy className="h-6 w-6" />
+                    <CardTitle className="flex items-center gap-2 text-xl">
+                      <Trophy className="h-5 w-5" />
                       {getLoteriaNome(resultadoAtual.loteria)}
                     </CardTitle>
-                    <CardDescription className="text-lg">
+                    <CardDescription className="text-base">
                       Concurso #{resultadoAtual.concurso} • {resultadoAtual.data}
                     </CardDescription>
                   </div>
@@ -297,15 +298,15 @@ const Resultados = () => {
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 pb-5">
                 {/* Números Sorteados */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Números Sorteados</h3>
-                  <div className="flex gap-3 flex-wrap">
+                  <h3 className="text-lg font-semibold mb-2">Números Sorteados</h3>
+                  <div className="flex gap-2 flex-wrap">
                     {resultadoAtual.dezenas.map((numero, index) => (
                       <div
                         key={index}
-                        className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-lg font-bold"
+                        className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-base font-semibold"
                       >
                         {numero}
                       </div>
@@ -330,56 +331,42 @@ const Resultados = () => {
                 </div>
 
                 {/* Informações do Sorteio */}
-                <div className="grid md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">Local do Sorteio</p>
-                          <p className="font-medium">{resultadoAtual.local}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">Valor Arrecadado</p>
-                          <p className="font-medium">{formatarValor(resultadoAtual.valorArrecadado)}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border bg-muted/30 p-3 flex items-center gap-3">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Local do Sorteio</p>
+                      <p className="font-medium text-sm">{resultadoAtual.local}</p>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border bg-muted/30 p-3 flex items-center gap-3">
+                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Valor Arrecadado</p>
+                      <p className="font-medium text-sm">{formatarValor(resultadoAtual.valorArrecadado)}</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Premiações */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Premiações</h3>
-                  <div className="space-y-3">
+                  <h3 className="text-lg font-semibold mb-2">Premiações</h3>
+                  <div className="space-y-2">
                     {resultadoAtual.premiacoes.map((premiacao, index) => (
-                      <Card key={index}>
-                        <CardContent className="pt-4">
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                              <Award className="h-5 w-5 text-primary" />
-                              <div>
-                                <p className="font-medium">{premiacao.descricao}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  {formatarNumero(premiacao.ganhadores)} ganhador{premiacao.ganhadores !== 1 ? 'es' : ''}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-lg">
-                                {formatarValor(premiacao.valorPremio)}
-                              </p>
-                            </div>
+                      <div key={index} className="rounded-lg border px-3 py-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Award className="h-5 w-5 text-primary" />
+                          <div>
+                            <p className="font-medium text-sm">{premiacao.descricao}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {formatarNumero(premiacao.ganhadores)} ganhador{premiacao.ganhadores !== 1 ? 'es' : ''}
+                            </p>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                        <p className="font-semibold text-sm sm:text-base">
+                          {formatarValor(premiacao.valorPremio)}
+                        </p>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -387,17 +374,17 @@ const Resultados = () => {
                 {/* Locais dos Ganhadores */}
                 {resultadoAtual.localGanhadores.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Locais dos Ganhadores Principais</h3>
-                    <div className="space-y-2">
+                    <h3 className="text-lg font-semibold mb-2">Locais dos Ganhadores Principais</h3>
+                    <div className="grid gap-2">
                       {resultadoAtual.localGanhadores.map((local, index) => (
-                        <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                        <div key={index} className="flex justify-between items-center rounded-lg border px-3 py-2">
                           <div>
-                            <p className="font-medium">{local.municipio} - {local.uf}</p>
+                            <p className="font-medium text-sm">{local.municipio} - {local.uf}</p>
                             {local.nomeFatansiaUL && (
-                              <p className="text-sm text-muted-foreground">{local.nomeFatansiaUL}</p>
+                              <p className="text-xs text-muted-foreground">{local.nomeFatansiaUL}</p>
                             )}
                           </div>
-                          <Badge variant="outline">
+                          <Badge variant="outline" className="text-xs">
                             {formatarNumero(local.ganhadores)} ganhador{local.ganhadores !== 1 ? 'es' : ''}
                           </Badge>
                         </div>
@@ -407,24 +394,20 @@ const Resultados = () => {
                 )}
 
                 {/* Próximo Concurso */}
-                <Card className="bg-gradient-to-r from-primary/10 to-secondary/10">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-lg font-semibold">Próximo Concurso</h3>
-                        <p className="text-muted-foreground">
-                          Concurso #{resultadoAtual.proximoConcurso} • {resultadoAtual.dataProximoConcurso}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Estimativa</p>
-                        <p className="text-2xl font-bold text-primary">
-                          {formatarValor(resultadoAtual.valorEstimadoProximoConcurso)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="rounded-lg border bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <h3 className="text-lg font-semibold">Próximo Concurso</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Concurso #{resultadoAtual.proximoConcurso} • {resultadoAtual.dataProximoConcurso}
+                    </p>
+                  </div>
+                  <div className="text-sm text-muted-foreground text-right">
+                    <span className="block">Estimativa</span>
+                    <span className="text-xl font-bold text-primary">
+                      {formatarValor(resultadoAtual.valorEstimadoProximoConcurso)}
+                    </span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -440,8 +423,8 @@ const Resultados = () => {
                     Histórico dos Últimos Concursos
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <Table>
+                <CardContent className="space-y-3">
+                  <Table className="text-sm">
                     <TableHeader>
                       <TableRow>
                         <TableHead>Concurso</TableHead>
