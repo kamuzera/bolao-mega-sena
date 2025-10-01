@@ -263,6 +263,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_participantes_concurso: {
+        Args: { p_concurso_id: string }
+        Returns: {
+          id: string
+          user_id: string
+          concurso_id: string
+          numeros_escolhidos: number[]
+          quantidade_cotas: number
+          valor_total: number
+          data_participacao: string
+          premiado: boolean | null
+          valor_premio: number | null
+          nome: string
+          email: string
+        }[]
+      }
       get_stripe_config_for_edge_functions: {
         Args: Record<PropertyKey, never>
         Returns: {

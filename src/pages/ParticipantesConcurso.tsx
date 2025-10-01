@@ -81,9 +81,7 @@ const ParticipantesConcurso = () => {
 
   // Recarregar usuários disponíveis quando participantes mudarem
   useEffect(() => {
-    if (participantes.length >= 0) {
-      fetchUsuarios();
-    }
+    fetchUsuarios();
   }, [participantes]);
 
   // Calcular valor total quando concurso ou quantidade de cotas mudar
@@ -119,27 +117,35 @@ const ParticipantesConcurso = () => {
   const fetchParticipantes = async () => {
     try {
       const { data, error } = await supabase
-        .from('participacoes')
-        .select('*')
-        .eq('concurso_id', id)
-        .order('data_participacao', { ascending: false });
+        .rpc('get_participantes_concurso', { p_concurso_id: id });
 
       if (error) throw error;
 
-      // Buscar informações dos usuários separadamente
-      const userIds = data?.map(p => p.user_id) || [];
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('user_id, nome, email')
-        .in('user_id', userIds);
+      const participantesFormatados: Participante[] = (data || []).map((participante: any) => ({
+        id: participante.id,
+        user_id: participante.user_id,
+        concurso_id: participante.concurso_id,
+        numeros_escolhidos: participante.numeros_escolhidos || [],
+        quantidade_cotas: participante.quantidade_cotas,
+        valor_total: Number(participante.valor_total) || 0,
+        data_participacao: participante.data_participacao,
+        premiado: participante.premiado,
+        valor_premio: Number(participante.valor_premio) || 0,
+        profiles: {
+          nome: participante.nome,
+          email: participante.email,
+        }
+      }));
 
-      // Combinar os dados
-      const participantesComProfiles = data?.map(participacao => ({
-        ...participacao,
-        profiles: profiles?.find(p => p.user_id === participacao.user_id)
-      })) || [];
+      setParticipantes(participantesFormatados);
 
-      setParticipantes(participantesComProfiles);
+      const totalCotas = participantesFormatados.reduce((acc, participante) => acc + participante.quantidade_cotas, 0);
+
+      setConcurso(prev => prev ? {
+        ...prev,
+        cotas_vendidas: totalCotas,
+        premio_total: prev.valor_cota * totalCotas,
+      } : prev);
     } catch (error) {
       console.error('Erro ao buscar participantes:', error);
       toast({
@@ -546,17 +552,17 @@ const ParticipantesConcurso = () => {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Progresso das vendas:</span>
-                <span className="font-medium">{participantes.length}/{concurso.max_cotas} cotas</span>
+        <span className="text-muted-foreground">Progresso das vendas:</span>
+        <span className="font-medium">{concurso.cotas_vendidas}/{concurso.max_cotas} cotas</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-primary h-2 rounded-full transition-all duration-300" 
-                  style={{ width: `${(participantes.length / concurso.max_cotas) * 100}%` }}
+                  style={{ width: `${(concurso.cotas_vendidas / concurso.max_cotas) * 100}%` }}
                 ></div>
               </div>
               <div className="text-xs text-muted-foreground text-center">
-                {((participantes.length / concurso.max_cotas) * 100).toFixed(1)}% vendido
+                {((concurso.cotas_vendidas / concurso.max_cotas) * 100).toFixed(1)}% vendido
               </div>
             </div>
 

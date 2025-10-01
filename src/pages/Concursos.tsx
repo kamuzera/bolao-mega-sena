@@ -84,12 +84,14 @@ const Concursos = () => {
           .select('valor_total, quantidade_cotas, user_id')
           .eq('concurso_id', concurso.id);
 
+        const todasParticipacoes = participacoes || [];
+
         // Separar participações do admin
-        const participacoesOutrosUsuarios = participacoes?.filter(p => p.user_id !== profile?.user_id) || [];
+        const participacoesOutrosUsuarios = todasParticipacoes.filter(p => p.user_id !== profile?.user_id);
         
         // Calcular valores corretos
         const receitaSemAdmin = participacoesOutrosUsuarios.reduce((sum, p) => sum + Number(p.valor_total), 0);
-        const totalCotasVendidas = participacoesOutrosUsuarios.reduce((sum, p) => sum + Number(p.quantidade_cotas), 0);
+        const totalCotasVendidas = todasParticipacoes.reduce((sum, p) => sum + Number(p.quantidade_cotas), 0);
         
         // Buscar configurações admin para calcular "Para Jogar"
         let totalParaJogar = 0;
