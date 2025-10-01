@@ -286,6 +286,15 @@ export type Database = {
           secret_key: string
         }[]
       }
+      set_profile_info: {
+        Args: {
+          _user_id: string
+          _nome: string | null
+          _email: string
+          _telefone: string | null
+        }
+        Returns: void
+      }
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean

@@ -178,7 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data: signUpData, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -197,6 +197,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           variant: "destructive",
         });
       } else {
+        if (signUpData?.user) {
+          const telefoneSanitizado = telefone?.trim() || null;
+
+          const { error: profileError } = await supabase.rpc('set_profile_info', {
+            _user_id: signUpData.user.id,
+            _nome: nome,
+            _email: email,
+            _telefone: telefoneSanitizado,
+          });
+
+          if (profileError) {
+            console.error('Erro ao atualizar perfil após cadastro:', profileError);
+          }
+        }
+
         toast({
           title: "Cadastro realizado",
           description: "Verifique seu email para confirmar a conta.",

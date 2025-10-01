@@ -1,114 +1,64 @@
+# Dependências
 node_modules/
-dist/
-.DS_Store
+jspm_packages/
+bun.lockb
+.npm
+.yarn-integrity
 
-# Env files
-.env
-.env.local
-.env.*
-!.env.example
+# Builds e bundles
+dist/
+build/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Cache e artefatos temporários
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.rts2_cache_*/
+.eslintcache
+.supabase/
+pids
+*.pid
+*.seed
+*.pid.lock
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 supabase-logs-*.csv
 
-# Supabase local env (if any)
-supabase/.env
-# Dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-bun.lockb
-
-# Build outputs
-dist/
-build/
-
-# Environment variables
+# Variáveis de ambiente
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.example
+.env.*
+!.env.example
+supabase/.env
 
-# IDE
+# IDE / editores
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# Sistema operacional
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
+# Cobertura de testes
 coverage/
+.nyc_output/
 
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-jspm_packages/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
+# Históricos / pacotes
 .node_repl_history
-
-# Output of 'npm pack'
 *.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Supabase
-.supabase/
