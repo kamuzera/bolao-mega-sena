@@ -16,6 +16,7 @@ import Usuarios from "./pages/Usuarios";
 import ConfiguracoesAdmin from "./pages/ConfiguracoesAdmin";
 import IntegracaoWhatsApp from "./pages/IntegracaoWhatsApp";
 import ParticipantesConcurso from "./pages/ParticipantesConcurso";
+import NotificarConcurso from "./pages/NotificarConcurso";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/integracao-whatsapp" element={<Layout><IntegracaoWhatsApp /></Layout>} />
             <Route path="/configuracoes-admin" element={<Layout><ConfiguracoesAdmin /></Layout>} />
             <Route path="/concursos/:id/participantes" element={<Layout><ParticipantesConcurso /></Layout>} />
+            <Route path="/concursos/:id/notificar" element={<Layout><NotificarConcurso /></Layout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
