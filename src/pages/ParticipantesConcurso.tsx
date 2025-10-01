@@ -139,13 +139,17 @@ const ParticipantesConcurso = () => {
 
       setParticipantes(participantesFormatados);
 
-      const totalCotas = participantesFormatados.reduce((acc, participante) => acc + participante.quantidade_cotas, 0);
+      if (participantesFormatados.length > 0) {
+        const totalCotas = participantesFormatados.reduce((acc, participante) => acc + participante.quantidade_cotas, 0);
 
-      setConcurso(prev => prev ? {
-        ...prev,
-        cotas_vendidas: totalCotas,
-        premio_total: prev.valor_cota * totalCotas,
-      } : prev);
+        setConcurso(prev => prev ? {
+          ...prev,
+          cotas_vendidas: totalCotas,
+          premio_total: prev.valor_cota * totalCotas,
+        } : prev);
+      } else {
+        await fetchConcurso();
+      }
     } catch (error) {
       console.error('Erro ao buscar participantes:', error);
       toast({
@@ -616,68 +620,73 @@ const ParticipantesConcurso = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {participantes.map((participante) => (
-                <TableRow key={participante.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{participante.profiles?.nome || 'N/A'}</div>
-                      <div className="text-sm text-muted-foreground">{participante.profiles?.email || 'N/A'}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1 flex-wrap">
-                      {participante.numeros_escolhidos.map((num, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {num.toString().padStart(2, '0')}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{participante.quantidade_cotas}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="font-medium">
-                      R$ {participante.valor_total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(participante.data_participacao).toLocaleDateString('pt-BR')}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    {participante.premiado ? (
-                      <Badge variant="default" className="bg-yellow-500">
-                        <Trophy className="h-3 w-3 mr-1" />
-                        Premiado
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline">Participando</Badge>
-                    )}
-                  </TableCell>
-                  {profile?.tipo === 'admin' && (
+              {participantes.map((participante) => {
+                const podeVerEmail = profile?.tipo === 'admin' || participante.user_id === profile?.user_id;
+                const emailVisivel = podeVerEmail ? (participante.profiles?.email || 'N/A') : '';
+
+                return (
+                  <TableRow key={participante.id}>
                     <TableCell>
-                      <div className="flex gap-1">
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => openEditDialog(participante)}
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="destructive"
-                          onClick={() => handleDeleteParticipante(participante.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
+                      <div>
+                        <div className="font-medium">{participante.profiles?.nome || 'N/A'}</div>
+                        <div className="text-sm text-muted-foreground">{emailVisivel}</div>
                       </div>
                     </TableCell>
-                  )}
-                </TableRow>
-              ))}
+                    <TableCell>
+                      <div className="flex gap-1 flex-wrap">
+                        {participante.numeros_escolhidos.map((num, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {num.toString().padStart(2, '0')}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{participante.quantidade_cotas}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">
+                        R$ {participante.valor_total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(participante.data_participacao).toLocaleDateString('pt-BR')}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {participante.premiado ? (
+                        <Badge variant="default" className="bg-yellow-500">
+                          <Trophy className="h-3 w-3 mr-1" />
+                          Premiado
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline">Participando</Badge>
+                      )}
+                    </TableCell>
+                    {profile?.tipo === 'admin' && (
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openEditDialog(participante)}
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="destructive"
+                            onClick={() => handleDeleteParticipante(participante.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
               
               {participantes.length === 0 && (
                 <TableRow>
