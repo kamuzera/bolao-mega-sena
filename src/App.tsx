@@ -16,8 +16,9 @@ import Usuarios from "./pages/Usuarios";
 import ConfiguracoesAdmin from "./pages/ConfiguracoesAdmin";
 import IntegracaoWhatsApp from "./pages/IntegracaoWhatsApp";
 import ParticipantesConcurso from "./pages/ParticipantesConcurso";
-import NotificarConcurso from "./pages/NotificarConcurso";
 import NotFound from "./pages/NotFound";
+import Landing from "./pages/Landing";
+import NotificarConcurso from "./pages/NotificarConcurso";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
             <Route path="/concursos" element={<Layout><Concursos /></Layout>} />
